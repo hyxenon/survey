@@ -5,6 +5,7 @@ import {
   
   const isProtectedRoute = createRouteMatcher([
     '/dashboard(.*)',
+    '/survey-form(.*)',
     '/',
   ]);
   

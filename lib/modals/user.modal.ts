@@ -10,8 +10,8 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         unique: true
-    }
-})
+    },
+}, { timestamps: true})
 
 const User = models?.User || model('User', UserSchema)
 

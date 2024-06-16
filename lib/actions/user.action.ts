@@ -12,3 +12,14 @@ export async function createUser(user:any){
         console.log(error)
     }
 }
+export async function getUserByClerkId(clerkId: string){
+    await connect();
+  
+    try {
+      const user = await User.findOne({ clerkId });
+      return user;
+    } catch (error) {
+      console.error('Error fetching user by clerkId:', error);
+      return null;
+    }
+  }
