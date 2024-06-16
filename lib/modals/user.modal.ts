@@ -11,6 +11,10 @@ const UserSchema = new Schema({
         required: true,
         unique: true
     },
+    role: {
+        type: String,
+        required: true
+    }
 }, { timestamps: true})
 
 const User = models?.User || model('User', UserSchema)
