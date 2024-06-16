@@ -15,16 +15,18 @@ export default function RootLayout({
 
   useEffect(() => {
     async function getUser(id: string) {
-      const res = await fetch(`http://localhost:3000/api/user/${userId}`);
+      const res = await fetch(`http://localhost:3000/api/user/${id}`);
       const data = await res.json();
       setUser(data);
-      console.log(user?.email);
+      console.log(data);
     }
 
     if (userId) {
       getUser(userId);
     }
-  }, []);
+
+    console.log(userId);
+  }, [userId]);
 
   return (
     <div>
@@ -34,7 +36,8 @@ export default function RootLayout({
         </div>
       ) : (
         <div>
-          <Navbar />
+          <Navbar isAdmin={true} isInDashboard={true} />
+          <h1>{user?.email}</h1>
           {children}
         </div>
       )}
