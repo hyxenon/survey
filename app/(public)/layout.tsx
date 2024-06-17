@@ -32,7 +32,7 @@ export default function RootLayout({
   }, [userId]);
 
   return (
-    <div>
+    <div className="h-screen min-h-screen">
       <Navbar isAdmin={user?.role === "admin"} isInDashboard={false} />
       {children}
     </div>

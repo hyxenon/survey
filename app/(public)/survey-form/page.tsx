@@ -1,11 +1,13 @@
 "use client";
 
+import AlreadyResponed from "@/components/alreadyResponed";
 import CardQuestion2 from "@/components/cardQuestion2";
 import SurveyDescription from "@/components/surveyDescription";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -188,6 +190,30 @@ const dataQuestions = [
 ];
 
 const SurveyForm = () => {
+  const { userId } = useAuth();
+  const [alreadyResponded, setAlreadyResponded] = useState<boolean>();
+
+  useEffect(() => {
+    async function getUser(id: string) {
+      try {
+        const res = await fetch(`/api/survey-form/${id}`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        const data = await res.json();
+        if (data !== null) {
+          setAlreadyResponded(true);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    }
+
+    if (userId) {
+      getUser(userId);
+    }
+  }, [userId]);
+
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
@@ -195,7 +221,6 @@ const SurveyForm = () => {
     },
   });
 
-  const { userId } = useAuth();
   const onSubmit = async (values: z.infer<typeof QuestionSchema>) => {
     try {
       const res = await fetch("/api/add-survey", {
@@ -214,40 +239,49 @@ const SurveyForm = () => {
   };
 
   return (
-    <div className="px-8 sm: md:px-16 lg:px-32 xl:px-64 py-8 flex flex-col justify-center items-center bg-[#EBF2FA]">
-      <SurveyDescription />
-      <div className="mt-4 w-full max-w-[800px]">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex items-center justify-center flex-col gap-2"
-          >
-            {dataQuestions.map((question, index) => (
-              <CardQuestion2
-                questionTitle={question.questionTitle}
-                form={form}
-                name={question.name}
-                isRadioGroup={question.isRadioGroup}
-                key={index}
-                questions={question.questions}
-                items={question.items}
-              />
-            ))}
-            <Button
-              className="ml-auto bg-[#427AA1] hover:bg-[#064789]"
-              type="submit"
-            >
-              Submit Answers
-            </Button>
-          </form>
-        </Form>
-        <footer className="mt-4">
-          <p className="text-sm text-gray-500">
-            © BSIT 3-1 Group Social Media Influence on Academic Performance
-            (ITPE4) Final Requirement
-          </p>
-        </footer>
-      </div>
+    <div className="px-8 sm: md:px-16 lg:px-32 xl:px-64 py-8 flex flex-col min-h-full items-center bg-[#EBF2FA]">
+      {alreadyResponded ? (
+        <div className="max-w-[800px]">
+          <SurveyDescription />
+          <AlreadyResponed />
+        </div>
+      ) : (
+        <div>
+          <SurveyDescription />
+          <div className="mt-4 w-full max-w-[800px]">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex items-center justify-center flex-col gap-2"
+              >
+                {dataQuestions.map((question, index) => (
+                  <CardQuestion2
+                    questionTitle={question.questionTitle}
+                    form={form}
+                    name={question.name}
+                    isRadioGroup={question.isRadioGroup}
+                    key={index}
+                    questions={question.questions}
+                    items={question.items}
+                  />
+                ))}
+                <Button
+                  className="ml-auto bg-[#427AA1] hover:bg-[#064789]"
+                  type="submit"
+                >
+                  Submit Answers
+                </Button>
+              </form>
+            </Form>
+            <footer className="mt-4">
+              <p className="text-sm text-gray-500">
+                © BSIT 3-1 Group Social Media Influence on Academic Performance
+                (ITPE4) Final Requirement
+              </p>
+            </footer>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
