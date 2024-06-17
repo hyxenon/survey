@@ -1,4 +1,7 @@
 "use client";
+import AreaChartComponent from "@/components/charts/AreaChartComponent";
+import BarChartComponent from "@/components/charts/BarChartComponent";
+import LineChartComponent from "@/components/charts/LineChartComponent";
 import Loading from "@/components/Loading";
 import Navbar from "@/components/navbar";
 import Unauthorized from "@/components/unauthorized";
@@ -44,7 +47,11 @@ const Dashboard = () => {
       ) : (
         <div>
           <Navbar isAdmin={true} isInDashboard={true} />
-          <h1>{user?.email}</h1>
+          <div className="w-[500px] h-[200px]">
+            <AreaChartComponent />
+            <BarChartComponent />
+            <LineChartComponent />
+          </div>
         </div>
       )}
     </div>
