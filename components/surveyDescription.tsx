@@ -46,10 +46,10 @@ const SurveyDescription = () => {
               height={40}
             />
             <div>
-              <h1 className="text-sm font-semibold">
+              <h1 className="text-sm">
                 {user?.emailAddresses[0].emailAddress}
               </h1>
-              <p className="text-sm font-semibold">{user?.fullName}</p>
+              <p className="text-sm">{user?.fullName}</p>
             </div>
           </div>
         </CardFooter>

@@ -1,5 +1,5 @@
 import { useFormState } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
 import {
   FormControl,
@@ -9,7 +9,6 @@ import {
   FormMessage,
 } from "./ui/form";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { Label } from "@/components/ui/label";
 
 type ItemType = {
   id: string;
@@ -35,10 +34,8 @@ const CardQuestion2 = ({
 }: CardQuestionsProps) => {
   const { errors } = useFormState({ control: form.control });
 
-  // Check if the field has errors
   const hasError = errors[name] !== undefined;
 
-  // Define a CSS class for invalid state
   const cardClassName = `w-full max-w-[800px] ${
     hasError ? "border-red-200" : ""
   }`;

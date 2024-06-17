@@ -3,7 +3,7 @@ import Navbar from "@/components/navbar";
 import { User } from "@/lib/types/User";
 import { useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-
+import { Toaster } from "@/components/ui/toaster";
 export default function RootLayout({
   children,
 }: {
@@ -35,6 +35,7 @@ export default function RootLayout({
     <div className="h-screen min-h-screen">
       <Navbar isAdmin={user?.role === "admin"} isInDashboard={false} />
       {children}
+      <Toaster />
     </div>
   );
 }
