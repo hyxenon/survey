@@ -21,7 +21,6 @@ export default function RootLayout({
         }
         const data = await res.json();
         setUser(data);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -33,7 +32,7 @@ export default function RootLayout({
   }, [userId]);
 
   return (
-    <div>
+    <div className="h-screen min-h-screen">
       <Navbar isAdmin={user?.role === "admin"} isInDashboard={false} />
       {children}
     </div>
