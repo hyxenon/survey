@@ -6,9 +6,11 @@ import CardQuestion2 from "@/components/cardQuestion2";
 import SurveyDescription from "@/components/surveyDescription";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
+import { useFormState } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -194,6 +196,9 @@ const SurveyForm = () => {
   const { userId } = useAuth();
   const [alreadyResponded, setAlreadyResponded] = useState<boolean>();
   const [loading, setLoading] = useState(true);
+  const [submited, setSubmited] = useState(false);
+
+  const { toast } = useToast();
 
   useEffect(() => {
     async function getUser(id: string) {
@@ -216,7 +221,7 @@ const SurveyForm = () => {
     if (userId) {
       getUser(userId);
     }
-  }, [userId]);
+  }, [userId, submited]);
 
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
@@ -230,6 +235,10 @@ const SurveyForm = () => {
   }
 
   const onSubmit = async (values: z.infer<typeof QuestionSchema>) => {
+    toast({
+      title: "Submit Answers Success.",
+      description: "Thank you for answering our survey!",
+    });
     try {
       const res = await fetch("/api/add-survey", {
         method: "POST",
@@ -240,6 +249,8 @@ const SurveyForm = () => {
       });
       if (!res.ok) {
         throw new Error("Error sending answers");
+      } else {
+        setSubmited(true);
       }
     } catch (error) {
       console.error("Error sending response:", error);
@@ -276,6 +287,16 @@ const SurveyForm = () => {
                 <Button
                   className="ml-auto bg-[#427AA1] hover:bg-[#064789]"
                   type="submit"
+                  onClick={() => {
+                    if (!form.formState.isValid) {
+                      toast({
+                        variant: "destructive",
+                        title: "Uh oh! Incomplete input fields.",
+                        description:
+                          "You need to complete the form and try again",
+                      });
+                    }
+                  }}
                 >
                   Submit Answers
                 </Button>
