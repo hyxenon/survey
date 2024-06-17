@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import AlreadyResponed from "@/components/alreadyResponed";
 import CardQuestion2 from "@/components/cardQuestion2";
 import SurveyDescription from "@/components/surveyDescription";
@@ -192,6 +193,7 @@ const dataQuestions = [
 const SurveyForm = () => {
   const { userId } = useAuth();
   const [alreadyResponded, setAlreadyResponded] = useState<boolean>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getUser(id: string) {
@@ -206,6 +208,8 @@ const SurveyForm = () => {
         }
       } catch (error) {
         console.error("Error fetching user:", error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -220,6 +224,10 @@ const SurveyForm = () => {
       "3": [],
     },
   });
+
+  if (loading) {
+    return <Loading />;
+  }
 
   const onSubmit = async (values: z.infer<typeof QuestionSchema>) => {
     try {
