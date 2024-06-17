@@ -15,17 +15,22 @@ export default function RootLayout({
 
   useEffect(() => {
     async function getUser(id: string) {
-      const res = await fetch(`http://localhost:3000/api/user/${id}`);
-      const data = await res.json();
-      setUser(data);
-      console.log(data);
+      try {
+        const res = await fetch(`/api/user/${id}`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        const data = await res.json();
+        setUser(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
     }
 
     if (userId) {
       getUser(userId);
     }
-
-    console.log(userId);
   }, [userId]);
 
   return (
