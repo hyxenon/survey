@@ -194,6 +194,7 @@ const SurveyForm = () => {
   const { userId } = useAuth();
   const [alreadyResponded, setAlreadyResponded] = useState<boolean>();
   const [loading, setLoading] = useState(true);
+  const [submited, setSubmited] = useState(false);
 
   useEffect(() => {
     async function getUser(id: string) {
@@ -216,7 +217,7 @@ const SurveyForm = () => {
     if (userId) {
       getUser(userId);
     }
-  }, [userId]);
+  }, [userId, submited]);
 
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
@@ -240,6 +241,8 @@ const SurveyForm = () => {
       });
       if (!res.ok) {
         throw new Error("Error sending answers");
+      } else {
+        setSubmited(true);
       }
     } catch (error) {
       console.error("Error sending response:", error);
