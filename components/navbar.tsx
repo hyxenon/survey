@@ -10,7 +10,7 @@ type NavbarProps = {
 
 const Navbar = ({ isAdmin, isInDashboard }: NavbarProps) => {
   return (
-    <nav className="flex justify-between px-8 py-4 shadow-xl drop-shadow-2xl bg-[#064789]">
+    <nav className="flex justify-between items-center px-8 py-4 shadow-xl drop-shadow-2xl bg-[#064789]">
       <h1 className=" text-sm md:text-lg text-white font-bold">
         Group Social Media
       </h1>
@@ -22,7 +22,7 @@ const Navbar = ({ isAdmin, isInDashboard }: NavbarProps) => {
                 Survey Form
               </Link>
             ) : (
-              <Link href={"/dashboard"} className="text-white text-lg">
+              <Link href={"/dashboard"} className="text-white md:text-lg">
                 Dashboard
               </Link>
             )}
