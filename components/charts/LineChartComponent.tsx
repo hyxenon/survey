@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Bar,
   CartesianGrid,
   Legend,
   Line,
@@ -11,40 +10,25 @@ import {
   YAxis,
 } from "recharts";
 
-const productSales = [
-  {
-    name: "Jan",
-    product1: 3000,
-    product2: 4000,
-  },
-  {
-    name: "Feb",
-    product1: 1000,
-    product2: 2000,
-  },
-  {
-    name: "March",
-    product1: 5000,
-    product2: 1452,
-  },
-  {
-    name: "May",
-    product1: 3231,
-    product2: 1232,
-  },
-];
+type dataKeyType = {
+  _id: string;
+  count: number;
+};
 
-const LineChartComponent = () => {
+interface LineChartComponentProps {
+  responses: dataKeyType[];
+}
+
+const LineChartComponent = ({ responses }: LineChartComponentProps) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart width={500} height={500} data={productSales}>
+      <LineChart width={500} height={500} data={responses}>
         <YAxis />
-        <XAxis dataKey={"name"} />
+        <XAxis dataKey="_id" />
         <CartesianGrid />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
-        <Line dataKey={"product1"} />
-        <Line dataKey={"product2"} />
+        <Line dataKey="count" fill="#427AA1" />
       </LineChart>
     </ResponsiveContainer>
   );

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import {
   Bar,
@@ -12,40 +10,25 @@ import {
   YAxis,
 } from "recharts";
 
-const productSales = [
-  {
-    name: "Jan",
-    product1: 3000,
-    product2: 4000,
-  },
-  {
-    name: "Feb",
-    product1: 1000,
-    product2: 2000,
-  },
-  {
-    name: "March",
-    product1: 5000,
-    product2: 1452,
-  },
-  {
-    name: "May",
-    product1: 3231,
-    product2: 1232,
-  },
-];
+type dataKeyType = {
+  _id: string;
+  count: number;
+};
 
-const BarChartComponent = () => {
+interface BarChartComponentProps {
+  responses: dataKeyType[];
+}
+
+const BarChartComponent = ({ responses }: BarChartComponentProps) => {
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <BarChart width={500} height={500} data={productSales}>
-        <YAxis />
-        <XAxis dataKey={"name"} />
+    <ResponsiveContainer width="100%" height={400}>
+      <BarChart width={500} height={300} data={responses}>
         <CartesianGrid />
+        <XAxis dataKey="_id" />
+        <YAxis />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
-        <Bar dataKey={"product1"} />
-        <Bar dataKey={"product2"} />
+        <Bar dataKey="count" fill="#427AA1" />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -57,12 +40,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="p-4 bg-slate-900 flex flex-col gap-4 rounded-md">
         <p className="text-medium text-lg text-white">{label}</p>
         <p className="text-sm text-blue-400">
-          Product 1:
-          <span className="ml-2">${payload[0].value}</span>
-        </p>
-        <p className="text-sm text-indigo-400">
-          Product 2:
-          <span>${payload[1].value}</span>
+          Count:
+          <span className="ml-2">{payload[0].value}</span>
         </p>
       </div>
     );

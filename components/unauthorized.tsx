@@ -9,24 +9,12 @@ import {
 
 const Unauthorized = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Card>
-        <CardHeader>
-          <CardTitle>Unauthorized Access</CardTitle>
-          <CardDescription>
-            Only Admin can proceed to this link.
-          </CardDescription>
-        </CardHeader>
-        <CardFooter>
-          <p>
-            If you're not an admin, click{" "}
-            <Link href={"/survey-form"} className="font-bold">
-              here
-            </Link>{" "}
-            to return to the previous page.
-          </p>
-        </CardFooter>
-      </Card>
+    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <div className="flex items-center gap-6">
+        <p className="font-semibold text-2xl">404</p>
+        <div className="w-[1px] h-[50px] bg-gray-400"></div>
+        <p className="">This page could not be found.</p>
+      </div>
     </div>
   );
 };
