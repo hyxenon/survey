@@ -1,10 +1,12 @@
 "use client";
+import { getTotalCountResponses } from "@/actions/surveyResponse";
 import AreaChartComponent from "@/components/charts/AreaChartComponent";
 import BarChartComponent from "@/components/charts/BarChartComponent";
 import LineChartComponent from "@/components/charts/LineChartComponent";
 import ChartsCard from "@/components/ChartsCard";
 import Loading from "@/components/Loading";
 import Navbar from "@/components/navbar";
+import TotalCard from "@/components/TotalCard";
 import Unauthorized from "@/components/unauthorized";
 import { User } from "@/lib/types/User";
 import { useAuth } from "@clerk/nextjs";
@@ -23,6 +25,7 @@ type SurveyResponseModel = Question[];
 
 const Dashboard = () => {
   const { userId } = useAuth();
+  const [totalResponses, setTotalResponses] = useState<number>();
   const [user, setUser] = useState<User>();
   const [surveyResponses, setSurveyResponses] = useState<SurveyResponseModel>(
     []
@@ -37,7 +40,10 @@ const Dashboard = () => {
           throw new Error("Failed to fetch user data");
         }
         const data = await res.json();
+        const totalCount = await getTotalCountResponses();
+
         setUser(data);
+        setTotalResponses(totalCount);
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
@@ -80,7 +86,9 @@ const Dashboard = () => {
             <h1 className="text-[#064789] text-4xl mb-8">
               Data Analytics Reports
             </h1>
+
             <div className="w-full flex flex-col items-center justify-center gap-8 xl:w-[80%]">
+              <TotalCard count={totalResponses ? totalResponses : 0} />
               <ChartsCard
                 questionTitle="1. How many hours do you spend on social media daily?"
                 responses={
