@@ -26,7 +26,7 @@ const FrequencyDistribution: React.FC = () => {
         const data: SurveyResponse[] = await response.json();
         const frequencyData = calculateFrequencyDistribution(data);
         setData(frequencyData);
-      } catch (error) {
+      } catch (error: any) {
         setError(error.message);
         console.error("Failed to fetch survey responses:", error);
       }
