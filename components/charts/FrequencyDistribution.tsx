@@ -1,71 +1,87 @@
-// pages/FrequencyDistribution.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from "recharts";
-
-interface DataPoint {
-  _id: string;
-  count: number;
-}
-
-const data: DataPoint[] = [
-  { _id: "Facebook", count: 14 },
-  { _id: "Instagram", count: 15 },
-  { _id: "Messenger", count: 40 },
-  { _id: "Reddit", count: 2 },
-  { _id: "Tiktok", count: 24 },
-  { _id: "X or Twitter", count: 8 },
-];
-
-const COLORS = [
-  "#FF6384",
-  "#36A2EB",
-  "#FFCE56",
-  "#4BC0C0",
-  "#9966FF",
-  "#FF9F40",
-];
+import {
+  calculateFrequencyDistribution,
+  SurveyResponse,
+} from "../../lib/utils/frequencyDistribution";
+import { Card } from "../ui/card";
 
 const FrequencyDistribution: React.FC = () => {
+  const [data, setData] = useState<{ platform: string; count: number }[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("/api/surveyResponses");
+        const data: SurveyResponse[] = await response.json();
+        const frequencyData = calculateFrequencyDistribution(data);
+        setData(frequencyData);
+      } catch (error) {
+        setError(error.message);
+        console.error("Failed to fetch survey responses:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const totalResponses = data.reduce((sum, { count }) => sum + count, 0);
+
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "500px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <ResponsiveContainer width="90%" height="90%">
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="count"
-            nameKey="_id"
-            cx="50%"
-            cy="50%"
-            outerRadius={150}
-            fill="#8884d8"
-            label
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">
+        Frequency Distribution of Social Media Platforms
+      </h1>
+      {error && <div className="text-red-500 mb-4">Error: {error}</div>}
+      <ResponsiveContainer width="100%" height={400}>
+        <BarChart
+          data={data}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 20,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="platform" />
+          <YAxis />
           <Tooltip />
           <Legend />
-        </PieChart>
+          <Bar dataKey="count" fill="#8884d8" />
+        </BarChart>
       </ResponsiveContainer>
+      <Card>
+        <div className=" p-4 bg-gray-100 rounded-lg shadow-md border">
+          <h2 className="text-xl font-semibold mb-4">Summary</h2>
+          <p className="text-gray-700 mb-2">
+            Total responses:{" "}
+            <span className="font-bold text-gray-900">{totalResponses}</span>
+          </p>
+          <ul className="list-disc list-inside">
+            {data.map(({ platform, count }) => (
+              <li key={platform} className="mb-2">
+                <span className="font-bold text-gray-900">{platform}</span>:{" "}
+                {count} responses (
+                <span className="text-blue-500 font-bold">
+                  {((count / totalResponses) * 100).toFixed(2)}%
+                </span>
+                )
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Card>
     </div>
   );
 };
