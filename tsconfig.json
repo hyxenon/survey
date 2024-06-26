@@ -12,7 +12,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["@types/simple-statistics"],
     "plugins": [
       {
         "name": "next"
