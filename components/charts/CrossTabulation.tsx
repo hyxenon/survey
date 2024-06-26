@@ -67,10 +67,11 @@ const CrossTabulation: React.FC = () => {
   // Fill in counts from survey data
   socialMediaUsageData.forEach((socialMediaEntry) => {
     gpaData.forEach((gpaEntry) => {
-      const count =
-        socialMediaEntry.count *
-        gpaData.find((gpa) => gpa._id === gpaEntry._id)?.count;
-      crossTabulation[socialMediaEntry._id][gpaEntry._id] = count;
+      const gpaEntryFound = gpaData.find((gpa) => gpa._id === gpaEntry._id);
+      if (gpaEntryFound) {
+        const count = socialMediaEntry.count * gpaEntryFound.count;
+        crossTabulation[socialMediaEntry._id][gpaEntry._id] = count;
+      }
     });
   });
 
